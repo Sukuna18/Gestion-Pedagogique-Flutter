@@ -13,7 +13,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-   bool isLoggedIn = false; 
 
   void login() {
     setState(() {
@@ -25,6 +24,7 @@ class _MyAppState extends State<MyApp> {
       title: "Gestion Pedagogique",
       debugShowCheckedModeBanner: false,
       routerConfig: router,
+      
     
     );
   }

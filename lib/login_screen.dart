@@ -116,10 +116,9 @@ class LoginScreen extends StatelessWidget {
                       final json = jsonDecode(response.body);
                       final SharedPreferences prefs = await _prefs;
                       prefs.setString('token', json['token']);
-                      // ignore: use_build_context_synchronously
-                      context.go('/list_cours');
+                      if(context.mounted) context.go('/list_cours');
                     }else{
-                      print(response.body);
+                      throw Exception('Failed to login');
                     }
                 },
                 child: const Padding(
