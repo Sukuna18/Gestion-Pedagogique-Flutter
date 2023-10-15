@@ -6,15 +6,15 @@ import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Gestion Pedagogique'),
         backgroundColor: Colors.pink.shade600,
@@ -110,16 +110,22 @@ class LoginScreen extends StatelessWidget {
                       'email': emailController.text,
                       'password': passwordController.text,
                     },
-
                   );
-                    if(response.statusCode == 200){
-                      final json = jsonDecode(response.body);
-                      final SharedPreferences prefs = await _prefs;
-                      prefs.setString('token', json['token']);
-                      if(context.mounted) context.go('/list_cours');
-                    }else{
-                      throw Exception('Failed to login');
-                    }
+                  if (response.statusCode == 200) {
+                    final json = jsonDecode(response.body);
+                    final SharedPreferences prefs = await _prefs;
+                    prefs.setString('token', json['token']);
+                    if (context.mounted) context.go('/list_cours');
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('Identifiants invalides. Veuillez réessayer.'),
+                      ),
+                    );
+
+                    throw Exception('Failed to login');
+                  }
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
