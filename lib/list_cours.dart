@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,40 +13,6 @@ class ListeCours extends StatefulWidget {
 class _ListeCoursState extends State<ListeCours> {
   Map<String, dynamic> data = {};
   List<dynamic> courses = [];
-  Future<void> logout() async {
-    // Afficher une boîte de dialogue de confirmation
-    bool confirmLogout = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          title: const Text('Confirmation'),
-          content: const Text('Êtes-vous sûr de vouloir vous déconnecter ?', style: TextStyle(fontSize: 20)),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // Annuler la déconnexion
-              },
-              child: const Text('Annuler', style: TextStyle(color: Colors.red, fontSize: 20)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // Confirmer la déconnexion
-              },
-              child: const Text('Déconnexion', style: TextStyle(color: Colors.green, fontSize: 20)),
-            ),
-          ],
-        );
-      },
-    );
-
-    // Si l'utilisateur a confirmé la déconnexion, alors effectuez la déconnexion
-    if (confirmLogout == true) {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.remove('token');
-      if (context.mounted) context.go('/');
-    }
-  }
 
   Future<void> getCours() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -62,9 +26,11 @@ class _ListeCoursState extends State<ListeCours> {
     );
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
-      courses = data['data'];
+      setState(() {
+        courses = data['data'];
+      });
       // ignore: avoid_print
-      print(courses);
+      // print(courses);
     } else {
       throw Exception('Failed to load cours');
     }
@@ -142,20 +108,7 @@ class _ListeCoursState extends State<ListeCours> {
                 ),
               ),
             ),
-            ConvexAppBar(
-              backgroundColor: Colors.pink.shade600,
-              color: Colors.white,
-              items: const [
-                TabItem(icon: Icons.school, title: 'Cours'),
-                TabItem(icon: Icons.calendar_month, title: 'Session'),
-                TabItem(icon: Icons.exit_to_app, title: 'Logout'),
-              ],
-              onTap: (int i) async {
-                if (i == 2) {
-                  await logout();
-                }
-              },
-            ),
+           
           ],
         ),
       ),

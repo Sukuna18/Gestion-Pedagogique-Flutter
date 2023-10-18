@@ -1,5 +1,6 @@
 import 'package:gestion_pedagogique_flutter/list_cours.dart';
 import 'package:gestion_pedagogique_flutter/login_screen.dart';
+import 'package:gestion_pedagogique_flutter/session_cours.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,10 @@ final router = GoRouter(
       path: '/list_cours',
       builder: (context, state) => const ListeCours(),
     ),
+    GoRoute(
+      path: '/session_cours',
+      builder: (context, state) => const SessionCours(),
+    )
   ],
   redirect: (context, state) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'package:go_router/go_router.dart';
+import 'package:gestion_pedagogique_flutter/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
@@ -14,7 +13,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Gestion Pedagogique'),
         backgroundColor: Colors.pink.shade600,
@@ -115,8 +113,9 @@ class LoginScreen extends StatelessWidget {
                     final json = jsonDecode(response.body);
                     final SharedPreferences prefs = await _prefs;
                     prefs.setString('token', json['token']);
-                    if (context.mounted) context.go('/list_cours');
+                    if (context.mounted) Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainScreen()));
                   } else {
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content:
